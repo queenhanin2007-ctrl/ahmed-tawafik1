@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رسالة أخيرة</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0b0f19;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* تأثير المطر */
+        .rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .drop {
+            position: absolute;
+            background: linear-gradient(transparent, rgba(255, 255, 255, 0.4));
+            width: 1px;
+            height: 20px;
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-20px); }
+            100% { transform: translateY(105vh); }
+        }
+
+        /* الحاوية الرئيسية */
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 650px;
+            background: rgba(18, 24, 38, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            margin: 20px 0;
+        }
+
+        /* شاشة الباسوورد */
+        #auth-screen {
+            text-align: center;
+        }
+
+        #auth-screen h2 {
+            margin-bottom: 20px;
+            color: #93c5fd;
+            font-size: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .password-wrapper {
+            position: relative;
+            width: 70%;
+        }
+
+        input[type="password"], input[type="text"] {
+            width: 100%;
+            padding: 12px 45px 12px 18px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #60a5fa;
+        }
+
+        /* أيقونة العين */
+        .toggle-password {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #94a3b8;
+            font-size: 1.2rem;
+            padding: 0;
+        }
+
+        .toggle-password:hover {
+            color: #fff;
+        }
+
+        button.submit-btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            background: #3b82f6;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button.submit-btn:hover {
+            background: #2563eb;
+        }
+
+        .error-msg {
+            color: #f87171;
+            margin-top: 12px;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        /* محتوى الرسالة */
+        #content-screen {
+            display: none;
+            max-height: 75vh;
+            overflow-y: auto;
+            padding-left: 10px;
+        }
+
+        #content-screen::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #content-screen::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+
+        .message-box {
+            background: rgba(30, 41, 59, 0.6);
+            border-right: 4px solid #60a5fa;
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .red-text {
+            color: #f87171;
+            font-weight: bold;
+            border-right-color: #f87171;
+        }
+
+        .greeting {
+            font-size: 1.2rem;
+            color: #93c5fd;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- تأثير المطر -->
+    <div class="rain" id="rain"></div>
+
+    <div class="container">
+        <!-- شاشة إدخال الباسوورد -->
+        <div id="auth-screen">
+            <h2>كنت حابه أقولك حاجه اخيره</h2>
+            <p style="color: #94a3b8; margin-bottom: 15px; font-size: 0.95rem;">أدخل كلمة المرور للمتابعة</p>
+            <div class="input-group">
+                <div class="password-wrapper">
+                    <input type="password" id="password-input" placeholder="أكتر اسم دلع كانت بتناديك بيه: حنين">
+                    <button type="button" class="toggle-password" onclick="togglePassword()">👁️</button>
+                </div>
+                <button class="submit-btn" onclick="checkPassword()">دخول</button>
+            </div>
+            <div id="error" class="error-msg">كلمة المرور غير صحيحة (تذكر: الباسورد هو أكتر اسم دلع كانت بتناديك بيه).</div>
+        </div>
+
+        <!-- شاشة محتوى الرسالة -->
+        <div id="content-screen">
+            <div class="greeting">كنت حابه أقولك حاجه اخيره:</div>
+
+            <div class="message-box">
+                أنا عارفة إن يمكن كتير بأطلب منك نسيب بعض، وده بسبب إنك بتحسسني بإهمال وبتطنّش، لأني بأحس إنك بتهملني عشان مش عايزني، فده بيوجعني. إحساس إنك بتترمي على الرف لحد ما اللي بيحبك يرجع لك لما يفضي، وكل حاجة في حياتك أولوية إلا أنت، وحش قوي ومؤلم. فبأشوف إن أنا لو سبنا بعض ده أحسن ما أكون مش مستعدة.. وبعدين ونسيب بعض؟ كنت عايزاك.. أنا بس كنت عايزاك تطبطب عليّ.
+            </div>
+
+            <div class="message-box">
+                أنا مش عارفة أنا مريت بفترة مؤلمة إزاي لوحدي السنة اللي فاتت وصعبة، كنت بأهون نفسي وأستحمل الوجع لحد ما تعبت، وهي فجأة ظهرت في حياتي. أنا عندي كسور كثيرة، عديت بعمليات في الكلية وكنت بأعدي وعزوة أصحابي ما كانتش فاضية تكون جنبي، وعمري ما شفتها إنها مأثرة معي وإني بأحبها زيادة عن اللزوم رغم قسوتها عليّ! صداقة؟! وأحط علامة تعجب (!) غير الكلية دخلت عمليات كثيرة في اللثة.. تخيل تتحمل ألم لمدة سنة، غير وجع الجسم الشديد عشان الكسور تلم، يبقى عندك الكسر اللي اتكسر واتلم.. اتكسر تاني! فده بيوجع الضعف. ما كنتش عايزة منك كتير والله، إنما كلامك وجعني قوي.
+            </div>
+
+            <div class="message-box">
+                سواء هو إني نحس.. أنا يا أحمد؟! أنا يا أحمد نحس؟ (؟...) ما لهم! أمّال لو مش عايزني هتقول إيه؟ لو كده عايزني بكلامك اللي يوجع ده؟! (؟...) بسيبك من عصبيتي وساعاتي، ما أخذتش بالك إن من حبي فيك وليك رجعت طفلة؟! (؟...) إني كنت بأتخانق معك عشان كنت خايفة.. بالكلام أبويا أشرف! حاسة إني محبطة، عايزة منك شوية طبطبة بس يا أستاذ، فاهمة وأنت تركز في كلامي مش أكتر والله.
+            </div>
+
+            <div class="message-box">
+                لو أنت كنت قرأت الموقع فتحت الموقع وقرأت اللي فيه اللي قبل ده، كنت لقيت كل الحلول. لو أخذت بالك، بقى لي مدة كنت بعدي، مع إنك كنت بتكرر رسائلي وتضايق.. بس كنت بعدي. بس أنت عمرك ما شفت لي حاجة حلوة، بس أنت كنت عايز تشوف الحاجة الوحشة عشان تطلعني أنا اللي غلطانة عشان أسيبه.. وأديني سيبته وعطيتك اللي أنت عايزه، عشان يبقى اسمك إن أنت اديتني وعد إن أنت تيجي تتقدملي وبتحبني وفي الآخر أنا اللي اتخلت عنك.. بس الحقيقة إن أنت اللي اتخليت عني.
+            </div>
+
+            <div class="message-box red-text">
+                عمومًا طالما أنا وحشة عليك في درجاتي ونحس.. ربنا يعوض عليك يا رب ويكرمك في اللي جاي. بس أنا آسفة إني حبيتك، وآسفة إني مش هقدر أسامحك على الكلام اللي قولته لي ده، لأنه وجعني قوي ورشق جوه قلبي زي السهم.. ده أسوأ من السهم كمان.
+            </div>
+
+            <div class="message-box">
+                أنا مش طول الوقت أنا كده، إنما أنا موجوعة من كذا صدمة في السنة اللي فاتت مش عارفة أسبب حاجة من كترهم.. مخليني حاسة إني غريبة عن نفسي قوي، مش فاكرة.. سوري، مش عارفة هواياتي ولا الناس اللي حواليا اللي طلعت كدابة.. حتى شكلي دلوقتي في مني لكنه مش أنا.. محطوطة بمكسور (...). بس علشان كنت بأحبك، كنت عايزاك تطمنني، تسندني، تطبطب عليّ.
+            </div>
+
+            <div class="message-box">
+                أنت لو كنت بتصلي كنت هتعرف إن كل حاجة في الدنيا دي قضاء وقدر، ما فيش اسمها نحس أصلًا، بس الكلمة على فكرة وجعتني إن أنت شايفني إن أنا وحشة قوي كده في حياتك. لو أنا كان فيّ غلطات فأنت كنت ممكن تصلحها بحاجات بسيطة لو كنت عملتها.. بس خلاص، أنا فهمت إن أنا غير مرحب بها في حياتك.
+            </div>
+
+            <div style="text-align: center; margin-top: 25px; color: #94a3b8; font-size: 1.1rem; font-weight: bold;">
+                أتمنى لك التوفيق والنجاح.. سلام يا أحمد.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // تأثير المطر
+        const rainContainer = document.getElementById('rain');
+        const dropCount = 60;
+
+        for (let i = 0; i < dropCount; i++) {
+            const drop = document.createElement('div');
+            drop.classList.add('drop');
+            drop.style.left = Math.random() * 100 + '%';
+            drop.style.top = (Math.random() * -20) + 'px';
+            drop.style.animationDuration = (Math.random() * 0.8 + 0.5) + 's';
+            drop.style.animationDelay = (Math.random() * 2) + 's';
+            rainContainer.appendChild(drop);
+        }
+
+        // إظهار وإخفاء الباسورد عن طريق أيقونة العين
+        function togglePassword() {
+            const passInput = document.getElementById('password-input');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+            } else {
+                passInput.type = 'password';
+            }
+        }
+
+        // التحقق من الباسوورد
+        function checkPassword() {
+            const passInput = document.getElementById('password-input').value;
+            const errorMsg = document.getElementById('error');
+            
+            if (passInput === 'حبوبي') {
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('content-screen').style.display = 'block';
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
